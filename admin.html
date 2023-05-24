@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+Design by TEMPLATED
+http://templated.co
+Released for free under the Creative Commons Attribution License
+
+Name       : Coefficient 
+UpdatedName: DogPlanet, для учебных целей
+Description: A two-column, fixed-width design with dark color scheme.
+Version    : 1.0
+Released   : 20131117
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Порода</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet" />
+<link href="default.css" rel="stylesheet" type="text/css" media="all" />
+<link href="fonts.css" rel="stylesheet" type="text/css" media="all" />
+<!--[if IE 6]>
+<link href="default_ie6.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+</head>
+<body>
+<div id="wrapper">
+    <?php
+    include("header.html");
+    include("configdb.php");
+	$con = mysqli_connect($dblocation,$dbuser,$dbpasswd,$dbname);
+
+	if (mysqli_connect_errno())
+	{
+		echo "Faild to connect to MySQL:" .mysqli_connect_error();
+		exit();
+	}
+    session_start(); 
+    if ( ! isset ($_SESSION[ 'name' ])){
+        $user = "";
+    } else {
+        $user = $_SESSION['name']; 
+    }
+    if ( ! isset ($_SESSION[ 'pass' ])){
+        $pass = "";
+    } else {
+        $pass = $_SESSION['pass']; 
+    }   
+    
+    $cat = "";
+    $poroda = "";
+    $description = "";
+    $img1 = "";
+    $img2 = "";
+    $img3 = "";
+
+    if (isset($_POST['user'])) { 
+        $user = $_POST['user'];
+    }
+    if (isset($_POST['pass'])) { 
+        $pass = $_POST['pass'];
+    }    
+
+    if (isset($_POST['cat'])) { 
+        $cat = $_POST['cat'];
+    }    
+    if (isset($_POST['poroda'])) { 
+        $poroda = $_POST['poroda'];
+    }    
+    if (isset($_POST['description'])) { 
+        $description = $_POST['description'];
+    }
+    if (isset($_FILES['filename1']['name']) && ($_FILES['filename1']['name'] != '')){
+        $img1 = $_FILES['filename1']['name'];
+    }    
+    if (isset($_FILES['filename2']['name']) && ($_FILES['filename2']['name'] != '')){
+        $img2 = $_FILES['filename2']['name'];
+    }    
+    if (isset($_FILES['filename3']['name']) && ($_FILES['filename3']['name'] != '')){
+        $img3 = $_FILES['filename3']['name'];
+    }    
+
+    if($user == "admin"
+    && $pass == "admin")
+    {
+        if($cat != "" && $poroda != "" && $description != "" && $img1 != "" && $img2 != "" && $img3 != "")
+        {
+            // Проверяем загружен ли файл
+            if(is_uploaded_file($_FILES["filename1"]["tmp_name"]))
+            {
+              // Если файл загружен успешно, перемещаем его
+              // из временной директории в конечную
+              move_uploaded_file($_FILES["filename1"]["tmp_name"], "images/".$_FILES["filename1"]["name"]);
+                } else {
+               echo("Ошибка загрузки файла 1");
+            }
+
+            if(is_uploaded_file($_FILES["filename2"]["tmp_name"]))
+            {
+              move_uploaded_file($_FILES["filename2"]["tmp_name"], "images/".$_FILES["filename2"]["name"]);
+                } else {
+               echo("Ошибка загрузки файла 2");
+            } 
+
+            if(is_uploaded_file($_FILES["filename3"]["tmp_name"]))
+            {
+              move_uploaded_file($_FILES["filename3"]["tmp_name"], "images/".$_FILES["filename3"]["name"]);
+                } else {
+               echo("Ошибка загрузки файла 3");
+            } 
+
+            $sql = "INSERT INTO dog (cat, name, description, img, img2, img3) VALUES ($cat, '$poroda', '$description', '$img1', '$img2', '$img3')";
+            if($con->query($sql)){
+                echo "<script>alert('Данные успешно добавлены')</script>";
+            } else{
+                echo "Ошибка: " . $con->error;
+            }
+            $cat = "";
+            $poroda = "";
+            $description = "";
+            $img1 = "";
+            $img2 = "";
+            $img3 = "";
+        }
+        $_SESSION['name'] = $user;
+        $_SESSION['pass'] = $pass;
+        ?>
+        <div id="page" class="container">
+                <form action="admin.html" method="post" enctype="multipart/form-data">
+                    <table>
+                        <tr>
+                            <td>
+                                <p><label>Категория</label></p>
+                            </td>
+                            <td>
+                                <input type="text" name="cat" id="cat">
+                                <label>(1 - Маленькие, 2 - Средние, 3 - Крупные)</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p><label>Порода</label></p>
+                            </td>
+                            <td>
+                                <input type="text" name="poroda" id="poroda">
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <p><label>Описание</label></p>
+                            </td>
+                            <td>
+                                <textarea name="description" id="description"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p><label>Фотография 1</label></p>
+                            </td>
+                            <td>
+                                <input type="file" name="filename1">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p><label>Фотография 2</label></p>
+                            </td>
+                            <td>
+                                <input type="file" name="filename2">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p><label>Фотография 3</label></p>
+                            </td>
+                            <td>
+                                <input type="file" name="filename3">
+                            </td>
+                        </tr>
+                    </table>
+                    <p><br> 
+                    <input type="submit" value="Загрузить"><br>
+                    </p>
+                </form>
+        </div>
+    <?}
+    else
+    {
+        if(isset($_POST))
+        {?>
+            <div id="page" class="container">
+                <div class="column1">
+                    <form method="POST" action="admin.html">
+                        <p><strong>User</strong> <input type="text" name="user"></input></p>
+                        <p><strong>Pass</strong> <input type="password" name="pass"></input></p>
+                        <strong><input type="submit" name="submit" value="Перейти"></input></strong>
+                        </form>
+                </div>
+            </div>
+        <?}
+    }
+    ?>
+</div>
+<div id="footer">
+	<p>&copy; Разработка для учебных целей. All rights reserved.</p>
+</div>
+</body>
+</html>

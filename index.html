@@ -5,6 +5,7 @@ http://templated.co
 Released for free under the Creative Commons Attribution License
 
 Name       : Coefficient 
+UpdatedName: DogPlanet, для учебных целей
 Description: A two-column, fixed-width design with dark color scheme.
 Version    : 1.0
 Released   : 20131117
@@ -25,8 +26,9 @@ Released   : 20131117
 </head>
 <body>
 <div id="wrapper">
-<?php
-	include("header.html");
+	<?php
+		include("header.html");
+		session_unset(); // удаляет из сессии все переменные
 	?>
 	<div id="page" class="container">
 		<div class="column1">

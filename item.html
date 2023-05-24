@@ -5,6 +5,7 @@ http://templated.co
 Released for free under the Creative Commons Attribution License
 
 Name       : Coefficient 
+UpdatedName: DogPlanet, для учебных целей
 Description: A two-column, fixed-width design with dark color scheme.
 Version    : 1.0
 Released   : 20131117
@@ -41,7 +42,7 @@ Released   : 20131117
 	{
 		$dog = $_GET["dog"];
 	}
-	$result = $con->query("SELECT * FROM dog WHERE cat='$id' and poroda='$dog'"); // запрос на выборку
+	$result = $con->query("SELECT * FROM dog WHERE cat='$id' and name='$dog'"); // запрос на выборку
 	$row = mysqli_fetch_assoc($result);
 ?>
 

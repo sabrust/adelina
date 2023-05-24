@@ -5,6 +5,7 @@ http://templated.co
 Released for free under the Creative Commons Attribution License
 
 Name       : Coefficient 
+UpdatedName: DogPlanet, для учебных целей
 Description: A two-column, fixed-width design with dark color scheme.
 Version    : 1.0
 Released   : 20131117
@@ -13,7 +14,7 @@ Released   : 20131117
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Породы собак</title>
+<title>Администрирование</title>
 <meta name="keywords" content="" />
 <meta name="description" content="" />
 <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet" />
@@ -51,7 +52,7 @@ Released   : 20131117
 				<img src="images/<?php echo $row['img']; ?>" width="210" height="150" alt="" />
 			</div>
 			<div class="column3">
-				<a href="item.html?id=<?php echo $row['cat']; ?>&dog=<?php echo $row['poroda']; ?>">
+				<a href="item.html?id=<?php echo $row['cat']; ?>&dog=<?php echo $row['name']; ?>">
 					<p><strong><?php echo $row['name']; ?></strong></p>
 				</a>
 				<p><?php echo $row['description']; ?></p>
