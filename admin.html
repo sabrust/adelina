@@ -55,6 +55,8 @@ Released   : 20131117
     $img2 = "";
     $img3 = "";
 
+    $porodadog = "";
+
     if (isset($_POST['user'])) { 
         $user = $_POST['user'];
     }
@@ -79,7 +81,11 @@ Released   : 20131117
     }    
     if (isset($_FILES['filename3']['name']) && ($_FILES['filename3']['name'] != '')){
         $img3 = $_FILES['filename3']['name'];
-    }    
+    } 
+    
+    if (isset($_POST['porodadog'])) { 
+        $porodadog = $_POST['porodadog'];
+    }   
 
     if($user == "admin"
     && $pass == "admin")
@@ -128,11 +134,22 @@ Released   : 20131117
                 $img3 = "";    
             }
         }
+        if($porodadog != ""){
+            $res = "DELETE FROM dog WHERE name = '$porodadog'";
+            if($con->query($res)){                
+                echo "<script>alert('Порода удалена!')</script>";
+            }
+            else{
+                echo "<script>alert('Ошибка удаления')</script>";
+            }
+        }
+
         $_SESSION['name'] = $user;
         $_SESSION['pass'] = $pass;
         ?>
         <div id="page" class="container">
                 <form action="admin.html" method="post" enctype="multipart/form-data">
+                    <h3><p><label>Добавление породы</label></p></h3>
                     <table>
                         <tr>
                             <td>
@@ -187,6 +204,24 @@ Released   : 20131117
                     </table>
                     <p><br> 
                     <input type="submit" value="Загрузить"><br>
+                    </p>
+                </form>
+                <br/>
+                <form action="admin.html" method="post">
+                    <h3><p><label>Удаление породы</label></p></h3>
+                    <select name="porodadog">
+                        <option value="0">Выберите породу</option>
+                    <?
+                    $res = $con->query('select `name` from `dog`');
+                    while($row = mysqli_fetch_assoc($res)){
+                    ?>
+                        <option value="<?=$row['name']?>"><?=$row['name']?></option>
+                    <?
+                    }
+                    ?>
+                    </select>
+                    <p><br> 
+                    <input type="submit" value="Удалить"><br>
                     </p>
                 </form>
         </div>
