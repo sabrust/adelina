@@ -30,7 +30,7 @@ Released   : 20131117
     include("header.html");
     include("configdb.php");
 	$con = mysqli_connect($dblocation,$dbuser,$dbpasswd,$dbname);
-
+//    mysqli_set_charset($con, "utf8");
 	if (mysqli_connect_errno())
 	{
 		echo "Faild to connect to MySQL:" .mysqli_connect_error();
@@ -86,42 +86,47 @@ Released   : 20131117
     {
         if($cat != "" && $poroda != "" && $description != "" && $img1 != "" && $img2 != "" && $img3 != "")
         {
-            // Проверяем загружен ли файл
-            if(is_uploaded_file($_FILES["filename1"]["tmp_name"]))
-            {
-              // Если файл загружен успешно, перемещаем его
-              // из временной директории в конечную
-              move_uploaded_file($_FILES["filename1"]["tmp_name"], "images/".$_FILES["filename1"]["name"]);
-                } else {
-               echo("Ошибка загрузки файла 1");
+            $result = $con->query("SELECT * FROM dog WHERE cat='$cat' and name='$poroda'");
+            if($result->num_rows > 0) {
+                echo "<script>alert('Ошибка! Данная порода уже есть в БД')</script>";
+            } else {
+                // Проверяем загружен ли файл
+                if(is_uploaded_file($_FILES["filename1"]["tmp_name"]))
+                {
+                  // Если файл загружен успешно, перемещаем его
+                  // из временной директории в конечную
+                  move_uploaded_file($_FILES["filename1"]["tmp_name"], "images/".$_FILES["filename1"]["name"]);
+                    } else {
+                   echo("Ошибка загрузки файла 1");
+                }
+    
+                if(is_uploaded_file($_FILES["filename2"]["tmp_name"]))
+                {
+                  move_uploaded_file($_FILES["filename2"]["tmp_name"], "images/".$_FILES["filename2"]["name"]);
+                    } else {
+                   echo("Ошибка загрузки файла 2");
+                } 
+    
+                if(is_uploaded_file($_FILES["filename3"]["tmp_name"]))
+                {
+                  move_uploaded_file($_FILES["filename3"]["tmp_name"], "images/".$_FILES["filename3"]["name"]);
+                    } else {
+                   echo("Ошибка загрузки файла 3");
+                } 
+    
+                $sql = "INSERT INTO dog (cat, name, description, img, img2, img3) VALUES ($cat, '$poroda', '$description', '$img1', '$img2', '$img3')";
+                if($con->query($sql)){
+                    echo "<script>alert('Данные успешно добавлены')</script>";
+                } else{
+                    echo "Ошибка: " . $con->error;
+                }
+                $cat = "";
+                $poroda = "";
+                $description = "";
+                $img1 = "";
+                $img2 = "";
+                $img3 = "";    
             }
-
-            if(is_uploaded_file($_FILES["filename2"]["tmp_name"]))
-            {
-              move_uploaded_file($_FILES["filename2"]["tmp_name"], "images/".$_FILES["filename2"]["name"]);
-                } else {
-               echo("Ошибка загрузки файла 2");
-            } 
-
-            if(is_uploaded_file($_FILES["filename3"]["tmp_name"]))
-            {
-              move_uploaded_file($_FILES["filename3"]["tmp_name"], "images/".$_FILES["filename3"]["name"]);
-                } else {
-               echo("Ошибка загрузки файла 3");
-            } 
-
-            $sql = "INSERT INTO dog (cat, name, description, img, img2, img3) VALUES ($cat, '$poroda', '$description', '$img1', '$img2', '$img3')";
-            if($con->query($sql)){
-                echo "<script>alert('Данные успешно добавлены')</script>";
-            } else{
-                echo "Ошибка: " . $con->error;
-            }
-            $cat = "";
-            $poroda = "";
-            $description = "";
-            $img1 = "";
-            $img2 = "";
-            $img3 = "";
         }
         $_SESSION['name'] = $user;
         $_SESSION['pass'] = $pass;
